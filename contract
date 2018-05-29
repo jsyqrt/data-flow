@@ -1,0 +1,61 @@
+<div class="mermaid">
+graph TD
+A[Start] -->|buyer place order| B(order: initiated)
+B --> |buyer deposit| C(order: buyer deposited)
+C --> |seller confirm| D{seller confirm order}
+D --> |seller not confirm| F
+D --> |confirm: true| E(order: seller confirmed)
+D --> |confirm: false| F(order: seller not confirmed)
+F --> |give buyer's deposit back| H(order: order canceled)
+E --> |seller deposit| I(order: seller deposited)
+I --> |proxy deposit| J(order: proxy deposited)
+J --> |seller deliver storage info and key to proxy|K(order: seller delivered)
+K --> |proxy fetch encrypted data from storage and deliver it and its key to buyer| L(order: product delivered)
+L --> N{buyer check product}
+N --> |buyer say nothing. equals product is good| O
+N --> |product is good| O(order: product confirmed)
+O --> |buyer pay for the product, release seller's deposit back, release proxy's deposit back, transfer buyer's deposit to seller and proxy| P(order: payed)
+O --> |if buyer not pay within a time range, seller can finish this order and get his and proxy's money| P
+P --> |buyer rate seller and proxy| R(order: rated)
+R --> S(order: finished)
+N --> |product is bad| Q(order: dispute)
+Q --> T{handle dispute} 
+T --> |seller check proxy and buyer| U(seller vote)
+T --> |buyer check proxy and seller| V(buyer vote)
+T --> |proxy check seller and buyer| W(proxy vote)
+U --> |seller vote bad guy| X{check if dispute handled}
+V --> |buyer vote bad guy| X
+W --> |proxy vote bad guy| X
+X --> |handled| Y1(order: dispute handled)
+X --> |not handled| Y2(order: dispute not handled)
+Y1 --> |finish order, every party can finish the order if dispute vote finished| Z1(order: finished)
+Y2 --> |ask for a trusted entity to handle the dispute| Z2(order: a trusted entity involved)
+Z2 --> |handle dispute| Y1
+
+NOTES --> nt1(seller sign the product first, proxy sign it next, buyer sign it last, all signature comes with a timestamp) 
+nt1 --> nt2(by cut and choose method, proxy can check a piece of a product to determine if product is good.)
+nt2 --> nt3(trusted entity also can handle dispute by the method above)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
