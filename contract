@@ -20,6 +20,37 @@ P --> |buyer rate seller and proxy| R(order: rated)
 R --> S(order: finished)
 N --> |product is bad| Q(order: dispute)
 Q --> T{handle dispute} 
+T --> |case product is junk| T1(order: dispute: junk product)
+T --> |case product block is duplicated| T2(order: dispute: duplicated product block)
+T --> |case wrong message| T3(order: dispute: wrong message)
+
+T1 --> |proxy check if it is junk| T11
+T11 --> |case product is really junk| T111
+T11 --> |case product is good| T112
+
+T2 --> |proxy and second choose randomly two block, check if those are same| T21
+T21 --> |case product is duplicated| T211
+T21 --> |case product is good| T212
+
+T3 --> |buyer tells proxy that he didn't receive correct message, proxy open a server waiting for others to check, seller check the file| T31
+T31 --> |case message is correct| T311
+T31 --> |case message is wrong| T312
+
+T111 --> |inform seller that he will be punished| T1111{wait seller dispute}
+T1111 --> |case seller says nothing| T11111
+T1111 --> |case seller says that it's not fair| T11112
+
+T11111 --> |punish seller, buyer and proxy get seller's money| T111111
+T111111 --> |terminate order, rate every parties| T111111(order: terminated)
+
+T11112 --> |involve another proxy to judge if product is junk| T111121
+T111121 --> |case it is really junk| T1111211
+T111121 --> |case it is good| T1111212
+
+T1111211 --> |punish seller, buyer and two proxy get seller's money| T111111
+
+
+
 T --> |seller check proxy and buyer| U(seller vote)
 T --> |buyer check proxy and seller| V(buyer vote)
 T --> |proxy check seller and buyer| W(proxy vote)
